@@ -1,0 +1,28 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+header, main, footer {
+    padding: 1rem;
+}
+
+header {
+    background: #333;
+    color: #fff;
+}
+
+main {
+    flex: 1;
+}
+
+footer {
+    background: #333;
+    color: #fff;
+    text-align: center;
+}
