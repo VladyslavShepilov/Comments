@@ -1,4 +1,5 @@
-{% extends "base_generic.html" %}
+{% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 <h1>Comments</h1>
@@ -47,21 +48,5 @@
     </span>
 </div>
 
-<script>
-function loadReplies(commentId) {
-    var replyContainer = document.getElementById('replies-' + commentId);
-
-    // Check if replies are already loaded
-    if (replyContainer.innerHTML.trim() === '') {
-        fetch(`/comments/${commentId}/replies/`)
-            .then(response => response.text())
-            .then(html => {
-                replyContainer.innerHTML = html;
-                replyContainer.style.display = 'block';
-            });
-    } else {
-        replyContainer.style.display = replyContainer.style.display === 'none' ? 'block' : 'none';
-    }
-}
-</script>
+<script src="{% static 'js/scripts.js' %}"></script>
 {% endblock %}
