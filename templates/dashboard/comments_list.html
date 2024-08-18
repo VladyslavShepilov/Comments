@@ -1,0 +1,67 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h1>Comments</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Created At</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for comment in comments %}
+        <tr id="comment-{{ comment.id }}">
+            <td>{{ comment.user.username }}</td>
+            <td>{{ comment.created_at|date:"Y-m-d H:i:s" }}</td>
+            <td>
+                <button onclick="loadReplies({{ comment.id }})">Show Replies</button>
+                <div id="replies-{{ comment.id }}" style="display: none;"></div>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3">No comments available.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+<script>
+function loadReplies(commentId) {
+    var replyContainer = document.getElementById('replies-' + commentId);
+
+    // Check if replies are already loaded
+    if (replyContainer.innerHTML.trim() === '') {
+        fetch(`/comments/${commentId}/replies/`)
+            .then(response => response.text())
+            .then(html => {
+                replyContainer.innerHTML = html;
+                replyContainer.style.display = 'block';
+            });
+    } else {
+        replyContainer.style.display = replyContainer.style.display === 'none' ? 'block' : 'none';
+    }
+}
+</script>
+{% endblock %}
