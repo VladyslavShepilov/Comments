@@ -2,7 +2,7 @@
     <div class="comment">
         <div class="comment-header">
             <img src="{{ comment.user.avatar.url }}" alt="Profile Image" class="profile-img">
-            <a href="#" class="comment-link">{{ reply.user.username }}</a>
+            <a href="{% url 'user-detail' pk=comment.user.pk %}" class="comment-link">{{ reply.user.username }}</a>
             at {{ reply.created_at }}
         </div>
         <p class="comment-text">{{ reply.text }}</p>
