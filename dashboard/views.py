@@ -10,3 +10,14 @@ class CommentsListView(generic.ListView):
 
     def get_queryset(self):
         return Comment.objects.filter(parent__isnull=True)
+
+
+class CommentDetailView(generic.DetailView):
+    model = Comment
+    template_name = "dashboard/comment_replies.html"
+    context_object_name = "comment"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["replies"] = self.object.replies.all()
+        return context

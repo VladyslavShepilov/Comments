@@ -1,9 +1,8 @@
 function loadReplies(commentId) {
-    var replyContainer = document.getElementById('replies-' + commentId);
+    var replyContainer = document.getElementById("replies-" + commentId);
 
-    // Check if replies are already loaded
-    if (replyContainer.innerHTML.trim() === '') {
-        fetch(`/comments/${commentId}/replies/`)
+    if (replyContainer.innerHTML.trim() === "") {
+        fetch(`/dashboard/${commentId}/replies/`)
             .then(response => response.text())
             .then(html => {
                 replyContainer.innerHTML = html;
