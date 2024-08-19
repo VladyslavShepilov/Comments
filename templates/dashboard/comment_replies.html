@@ -1,8 +1,13 @@
 {% for reply in replies %}
-    <div class="reply">
-        <p>{{ reply.user.username }}: {{ reply.text }}</p>
-        <p>{{ reply.created_at|date:"Y-m-d H:i:s" }}</p>
+    <div class="comment">
+        <div class="comment-header">
+            <a href="#" class="comment-link">{{ reply.user.username }}</a>
+            at {{ reply.created_at }}
+        </div>
+        <p class="comment-text">{{ reply.text }}</p>
+        <button onclick="loadReplies({{ reply.id }})" class="comment-button" data-id="{{ reply.id }}">Show Replies</button>
+        <div id="replies-{{ reply.id }}" class="replies" style="display: none;"></div>
     </div>
 {% empty %}
-    <p>No replies yet.</p>
+    <p class="no-replies">No replies yet</p>
 {% endfor %}
