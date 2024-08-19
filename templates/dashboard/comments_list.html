@@ -8,6 +8,7 @@
         {% for comment in comments %}
             <div class="comment">
                 <div class="comment-header">
+                    <img src="{{ comment.user.avatar.url }}" alt="Profile Image" class="profile-img">
                     <a href="#" class="comment-link">{{ comment.user.username }}</a>
                     at {{ comment.created_at }}
                 </div>

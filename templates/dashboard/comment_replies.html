@@ -1,6 +1,7 @@
 {% for reply in replies %}
     <div class="comment">
         <div class="comment-header">
+            <img src="{{ comment.user.avatar.url }}" alt="Profile Image" class="profile-img">
             <a href="#" class="comment-link">{{ reply.user.username }}</a>
             at {{ reply.created_at }}
         </div>

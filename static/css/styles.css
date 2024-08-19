@@ -22,7 +22,7 @@ main {
     flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start; /* Align content to the left */
 }
 
 footer {
@@ -34,10 +34,9 @@ footer {
 .comment-section {
     width: 80%;
     max-width: 800px;
-    margin: 0 auto;
+    margin: 0; /* Align to the left */
     text-align: left;
-    overflow-y: auto;
-    max-height: 600px;
+    /* Removed max-height and overflow-y */
 }
 
 .comment {
@@ -76,8 +75,7 @@ footer {
     border-left: 2px solid #ddd;
     padding-left: 10px;
     position: relative;
-    max-height: 300px;
-    overflow-y: auto;
+    /* Removed max-height and overflow-y */
 }
 
 .replies > .comment {
@@ -162,4 +160,14 @@ footer {
     text-align: center;
     color: #8e8e8e;
     font-style: italic;
+}
+
+.profile-img {
+    float: left;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+    margin-top: -20px;
+    object-fit: cover;
 }
