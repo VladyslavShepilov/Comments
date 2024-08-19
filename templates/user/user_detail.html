@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="user-detail-container">
+        <div class="avatar-container">
+            <img src="{{ user.avatar.url }}" alt="{{ user.username }}'s Avatar" class="user-avatar">
+        </div>
+
+        <div class="user-info">
+            <h1 class="user-info-item">{{ user.username }}</h1>
+            <p class="user-info-item">Email: {{ user.email }}</p>
+            <p class="user-info-item">Date Joined: {{ user.date_joined }}</p>
+            <p class="user-info-item">Last Login: {{ user.last_login }}</p>
+            <p class="user-info-item">Number of comments: {{ user_replies_count }}</p>
+        </div>
+    </div>
+{% endblock %}
