@@ -5,8 +5,16 @@
             at {{ reply.created_at }}
         </div>
         <p class="comment-text">{{ reply.text }}</p>
-        <button onclick="loadReplies({{ reply.id }})" class="comment-button" data-id="{{ reply.id }}">Show Replies</button>
-        <div id="replies-{{ reply.id }}" class="replies" style="display: none;"></div>
+        {% if reply.reply_count %}
+            <button
+                id="comment-button-{{ reply.id }}"
+                class="comment-button"
+                onclick="loadReplies({{ reply.id }})"
+                data-id="{{ reply.id }}">
+                Show {{ reply.reply_count }} replies
+            </button>
+            <div id="replies-{{ reply.id }}" class="replies" style="display: none;"></div>
+        {% endif %}
     </div>
 {% empty %}
     <p class="no-replies">No replies yet</p>

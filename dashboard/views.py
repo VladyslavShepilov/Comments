@@ -1,4 +1,6 @@
 from django.views import generic
+from django.db.models import Count
+
 from .models import Comment
 
 
@@ -9,7 +11,11 @@ class CommentsListView(generic.ListView):
     paginate_by = 25
 
     def get_queryset(self):
-        return Comment.objects.filter(parent__isnull=True)
+        return (
+            Comment.objects.filter(parent__isnull=True)
+            .select_related("user")
+            .annotate(reply_count=Count("replies"))
+        )
 
 
 class CommentDetailView(generic.DetailView):
@@ -19,5 +25,5 @@ class CommentDetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["replies"] = self.object.replies.all()
+        context["replies"] = self.object.replies.select_related("user").annotate(reply_count=Count("replies"))
         return context

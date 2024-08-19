@@ -36,6 +36,8 @@ footer {
     max-width: 800px;
     margin: 0 auto;
     text-align: left;
+    overflow-y: auto;
+    max-height: 600px;
 }
 
 .comment {
@@ -45,12 +47,13 @@ footer {
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: left;
-    transition: transform 0.3s ease;
+    transition: transform 1.1s ease;
     overflow-wrap: break-word;
 }
 
 .comment:hover {
     transform: scale(1.05);
+    border: 3px solid #ddd;
 }
 
 .comment-header {
@@ -73,6 +76,8 @@ footer {
     border-left: 2px solid #ddd;
     padding-left: 10px;
     position: relative;
+    max-height: 300px;
+    overflow-y: auto;
 }
 
 .replies > .comment {
@@ -102,7 +107,6 @@ footer {
 .comment-link:hover {
     color: orange;
 }
-
 
 .replies-section {
     width: 100%;
