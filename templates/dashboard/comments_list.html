@@ -2,7 +2,14 @@
 
 {% block content %}
     {% load static %}
-    <h1>Comments</h1>
+    <div class="comments-header">
+        <h1>Comments</h1>
+        <div class="order-buttons">
+            <a href="?order_by=username" class="order-button">Order by Username</a>
+            <a href="?order_by=email" class="order-button">Order by Email</a>
+            <a href="?order_by=date" class="order-button">Order by Date</a>
+        </div>
+    </div>
 
     <div class="comment-section">
         {% for comment in comments %}
@@ -25,23 +32,23 @@
         {% endfor %}
     </div>
 
-<div class="pagination">
-    <span class="step-links">
-        {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-        {% endif %}
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
 
-        <span class="current">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
         </span>
+    </div>
 
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-        {% endif %}
-    </span>
-</div>
-
-<script src="{% static 'js/scripts.js' %}"></script>
+    <script src="{% static 'js/scripts.js' %}"></script>
 {% endblock %}
