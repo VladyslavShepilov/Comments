@@ -1,34 +1,24 @@
 {% extends "base.html" %}
-{% load static %}
 
 {% block content %}
-<h1>Comments</h1>
+    {% load static %}
+    <h1>Comments</h1>
 
-<table>
-    <thead>
-        <tr>
-            <th>User</th>
-            <th>Created At</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
+    <div class="comment-section">
         {% for comment in comments %}
-        <tr id="comment-{{ comment.id }}">
-            <td>{{ comment.user.username }}</td>
-            <td>{{ comment.created_at|date:"Y-m-d H:i:s" }}</td>
-            <td>
+            <div class="comment">
+                <div class="comment-header">
+                    <a href="#" class="comment-link">{{ comment.user.username }}</a>
+                    at {{ comment.created_at }}
+                </div>
+                <p class="comment-text">{{ comment.text }}</p>
                 <button onclick="loadReplies({{ comment.id }})">Show Replies</button>
-                <div id="replies-{{ comment.id }}" style="display: none;"></div>
-            </td>
-        </tr>
+                <div id="replies-{{ comment.id }}" class="replies" style="display: none;"></div>
+            </div>
         {% empty %}
-        <tr>
-            <td colspan="3">No comments available.</td>
-        </tr>
+            <p>No comments yet</p>
         {% endfor %}
-    </tbody>
-</table>
+    </div>
 
 <div class="pagination">
     <span class="step-links">

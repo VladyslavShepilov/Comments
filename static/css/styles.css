@@ -6,6 +6,7 @@ html, body {
 body {
     display: flex;
     flex-direction: column;
+    font-family: Arial, sans-serif;
 }
 
 header, main, footer {
@@ -19,6 +20,9 @@ header {
 
 main {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 footer {
@@ -27,33 +31,60 @@ footer {
     text-align: center;
 }
 
+.comment-section {
+    width: 80%;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+
+.comment {
+    background-color: #f9f9f9;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.comment:hover {
+    transform: scale(1.05);
+}
+
+.comment-header {
+    background-color: #green;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.comment-text {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.replies {
+    margin-left: 40px;
+    border-left: 2px solid #ddd;
+    padding-left: 10px;
+}
+
 .pagination {
     text-align: center;
     margin: 20px 0;
 }
 
-.step-links {
-    display: inline-block;
+.comment-header {
+    background-color: #333;
 }
 
-.step-links a {
-    padding: 5px 10px;
-    margin: 0 5px;
-    border: 1px solid #ddd;
-    border-radius: 3px;
-    text-decoration: none;
-    color: #333;
+.comment-link {
+    color: yellow;
 }
 
-.step-links a:hover {
-    background-color: #f0f0f0;
-}
-
-.step-links .current {
-    padding: 5px 10px;
-    margin: 0 5px;
-    border: 1px solid #ddd;
-    border-radius: 3px;
-    background-color: #e0e0e0;
-    color: #333;
-}
+.comment-link:hover {
+    color: orange;
