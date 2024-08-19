@@ -34,9 +34,8 @@ footer {
 .comment-section {
     width: 80%;
     max-width: 800px;
-    margin: 0; /* Align to the left */
+    margin: 0;
     text-align: left;
-    /* Removed max-height and overflow-y */
 }
 
 .comment {
@@ -75,7 +74,6 @@ footer {
     border-left: 2px solid #ddd;
     padding-left: 10px;
     position: relative;
-    /* Removed max-height and overflow-y */
 }
 
 .replies > .comment {
@@ -232,4 +230,37 @@ header a {
 
 header a:hover {
     color: #ffa500;
+}
+
+.comments-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.comments-header h1 {
+    margin: 0;
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.order-buttons {
+    display: flex;
+    gap: 10px;
+    margin-left: 50px;
+}
+
+.order-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    white-space: nowrap;
+}
+
+.order-button:hover {
+    background-color: #0056b3;
 }
