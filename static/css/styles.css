@@ -38,15 +38,15 @@ footer {
     text-align: left;
 }
 
-
 .comment {
     background-color: #f9f9f9;
     padding: 15px;
     margin-bottom: 20px;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    text-align: center;
+    text-align: left;
     transition: transform 0.3s ease;
+    overflow-wrap: break-word;
 }
 
 .comment:hover {
@@ -54,7 +54,7 @@ footer {
 }
 
 .comment-header {
-    background-color: #green;
+    background-color: #333;
     color: #fff;
     padding: 10px;
     border-radius: 5px;
@@ -64,22 +64,35 @@ footer {
 
 .comment-text {
     margin-top: 10px;
-    text-align: center;
+    text-align: left;
+    overflow-wrap: break-word;
 }
 
 .replies {
-    margin-left: 40px;
+    margin-left: 20px;
     border-left: 2px solid #ddd;
     padding-left: 10px;
+    position: relative;
+}
+
+.replies > .comment {
+    margin-left: 20px;
+    transform: none;
+}
+
+.replies::before {
+    content: "";
+    position: absolute;
+    left: -20px;
+    top: 0;
+    height: 100%;
+    border-left: 2px solid #ddd;
+    z-index: -1;
 }
 
 .pagination {
     text-align: center;
     margin: 20px 0;
-}
-
-.comment-header {
-    background-color: #333;
 }
 
 .comment-link {
@@ -88,3 +101,61 @@ footer {
 
 .comment-link:hover {
     color: orange;
+}
+
+
+.replies-section {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 10px;
+    font-family: Arial, sans-serif;
+    color: #333;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.reply {
+    border-bottom: 1px solid #e6e6e6;
+    padding: 10px 0;
+    margin-bottom: 10px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.reply-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.reply-link {
+    font-weight: bold;
+    color: #0095f6;
+    text-decoration: none;
+    margin-right: 8px;
+}
+
+.reply-link:hover {
+    text-decoration: underline;
+}
+
+.reply-date {
+    color: #8e8e8e;
+    font-size: 0.9em;
+}
+
+.reply-text {
+    margin: 0;
+    text-align: left;
+    font-size: 1em;
+    color: #333;
+}
+
+.no-replies {
+    text-align: center;
+    color: #8e8e8e;
+    font-style: italic;
+}
