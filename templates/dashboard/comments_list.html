@@ -12,7 +12,11 @@
                     at {{ comment.created_at }}
                 </div>
                 <p class="comment-text">{{ comment.text }}</p>
-                <button onclick="loadReplies({{ comment.id }})">Show Replies</button>
+                {% if comment.reply_count %}
+                    <button id="comment-button-{{ comment.id }}" onclick="loadReplies({{ comment.id }})">
+                        Show {{ comment.reply_count }} replies
+                    </button>
+                {% endif %}
                 <div id="replies-{{ comment.id }}" class="replies" style="display: none;"></div>
             </div>
         {% empty %}
