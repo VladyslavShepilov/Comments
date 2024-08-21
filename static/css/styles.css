@@ -32,21 +32,22 @@ footer {
 }
 
 .comment-section {
-    width: 80%;
-    max-width: 800px;
+    width: auto;
     margin: 0;
     text-align: left;
 }
 
 .comment {
+    max-width: 800px;
     background-color: #f9f9f9;
     padding: 15px;
     margin-bottom: 20px;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: left;
-    transition: transform 1.1s ease;
+    transition: transform 1.1s ease, border-color 1.1s ease;
     overflow-wrap: break-word;
+    border: 3px solid transparent;
 }
 
 .comment:hover {
