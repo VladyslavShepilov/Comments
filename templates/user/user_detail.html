@@ -13,5 +13,8 @@
             <p class="user-info-item">Last Login: {{ user.last_login }}</p>
             <p class="user-info-item">Number of comments: {{ user_replies_count }}</p>
         </div>
+        {% if user == current_user %}
+            <a href="{% url 'update' %}" class="btn-submit">Update Profile</a>
+        {% endif %}
     </div>
 {% endblock %}
