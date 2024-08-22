@@ -50,8 +50,7 @@ class CommentDetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["replies"] = (
-            self.object.replies.select_related("user").
-            annotate(reply_count=Count("replies"))
+        context["replies"] = self.object.replies.select_related("user").annotate(
+            reply_count=Count("replies")
         )
         return context
