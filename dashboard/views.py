@@ -2,6 +2,7 @@ from django.views import generic
 from django.db.models import Count
 
 from .models import Comment
+from .forms import CommentForm
 
 
 class CommentsListView(generic.ListView):
@@ -32,10 +33,23 @@ class CommentsListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        sort_order = self.request.GET.get("sort_order", "asc")
-        context["next_sort_order"] = "desc" if sort_order == "asc" else "asc"
-
+        context["next_sort_order"] = "desc" if self.request.GET.get("sort_order", "asc") == "asc" else "asc"
+        context["comment_form"] = CommentForm()
         return context
+
+    def post(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        self.object_list = queryset
+        context = self.get_context_data(object_list=queryset)
+
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            form.save(user=self.request.user)
+            context["comment_form"] = CommentForm()
+        else:
+            context["comment_form"] = form
+
+        return self.render_to_response(context)
 
 
 class CommentDetailView(generic.DetailView):
@@ -43,15 +57,11 @@ class CommentDetailView(generic.DetailView):
     template_name = "dashboard/comment_replies.html"
     context_object_name = "comment"
 
-    def get_queryset(self):
-        queryset = Comment.objects.select_related("user")
-
-        return queryset
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["replies"] = (
-            self.object.replies.select_related("user").
-            annotate(reply_count=Count("replies"))
+            self.object.replies
+            .select_related("user")
+            .annotate(reply_count=Count("replies"))
         )
         return context
