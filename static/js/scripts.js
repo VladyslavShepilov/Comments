@@ -20,3 +20,28 @@ function loadReplies(commentId) {
         button.textContent = `Show replies`;
     }
 }
+
+
+function showReplyForm(replyId) {
+    var formId = "reply-form-" + replyId;
+    var formContainer = document.getElementById(formId);
+
+    if (formContainer.innerHTML.trim() === "") {
+        var formTemplate = document.getElementById("reply-form-template");
+        var clonedForm = formTemplate.cloneNode(true);
+        clonedForm.style.display = "block";
+        clonedForm.id = "";
+
+        var formElement = clonedForm.querySelector("form");
+        formElement.action = `/dashboard/`;
+
+        var parentField = formElement.querySelector("input[name='parent']");
+        if (parentField) {
+            parentField.value = replyId;
+        }
+
+        formContainer.appendChild(clonedForm);
+    }
+
+    formContainer.style.display = (formContainer.style.display === "none" || formContainer.style.display === "") ? "block" : "none";
+}

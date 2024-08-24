@@ -3,7 +3,7 @@
 {% block content %}
     {% load static %}
     <div class="comments-header">
-        <h1>Comments {{ comment.user }}</h1>
+        <h1>Comments</h1>
         <div class="order-buttons">
             <a href="?order_by=username&sort_order={{ next_sort_order }}" class="order-button">Order by Username</a>
             <a href="?order_by=email&sort_order={{ next_sort_order }}" class="order-button">Order by Email</a>
@@ -11,7 +11,19 @@
         </div>
     </div>
 
-    <div class="comment-section">
+    <div id="reply-form-template" style="display:none;">
+        <form method="post" action="">
+            {% csrf_token %}
+            {{ comment_form.text }}
+            <div class="captcha">{{ comment_form.captcha }}</div>
+            <input type="hidden" name="parent" value="">
+            <button type="submit" class="btn btn-success">Submit</button>
+        </form>
+    </div>
+
+
+
+
         {% for comment in comments %}
             <div class="comment">
                 <div class="comment-header">
@@ -19,7 +31,12 @@
                     <a href="{% url 'user-detail' pk=comment.user.pk %}" class="comment-link">{{ comment.user.username }}</a>
                     at {{ comment.created_at }}
                 </div>
+
                 <p class="comment-text">{{ comment.text }}</p>
+
+                <button type="button" class="btn btn-primary" onclick="showReplyForm({{ comment.id }})">Reply</button>
+                <div id="reply-form-{{ comment.id }}" style="display:none;"></div>
+
                 {% if comment.reply_count %}
                     <button id="comment-button-{{ comment.id }}" onclick="loadReplies({{ comment.id }})">
                         Show {{ comment.reply_count }} replies
