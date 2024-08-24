@@ -14,7 +14,7 @@ class UserRegistrationForm(UserCreationForm):
         fields = ["username", "email", "captcha"]
         widgets = {
             "password1": forms.PasswordInput(),
-            "password2": forms.PasswordInput()
+            "password2": forms.PasswordInput(),
         }
 
 
@@ -41,13 +41,20 @@ class OptionalPasswordChangeForm(PasswordChangeForm):
 
         if new_password1 or new_password2:
             if not new_password1 or not new_password2:
-                self.add_error("new_password2", "Both password fields must be filled if changing password.")
+                self.add_error(
+                    "new_password2",
+                    "Both password fields must be filled if changing password.",
+                )
             elif new_password1 != new_password2:
-                self.add_error("new_password2", "The two new password fields must match.")
+                self.add_error(
+                    "new_password2", "The two new password fields must match."
+                )
 
         return cleaned_data
 
     def save(self, commit=False):
-        if self.cleaned_data.get("new_password1") and self.cleaned_data.get("new_password2"):
+        if self.cleaned_data.get("new_password1") and self.cleaned_data.get(
+            "new_password2"
+        ):
             return super().save(commit=False)
         return self.user
