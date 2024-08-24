@@ -13,9 +13,7 @@ def profile_image_file_path(instance, filename):
 
 
 class User(AbstractUser):
-    email = models.EmailField(
-        unique=True, blank=False, null=False
-    )
+    email = models.EmailField(unique=True, blank=False, null=False)
     avatar = models.ImageField(
         upload_to=profile_image_file_path,
         default="default_profile.png",

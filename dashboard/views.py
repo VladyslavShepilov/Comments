@@ -33,7 +33,9 @@ class CommentsListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["next_sort_order"] = "desc" if self.request.GET.get("sort_order", "asc") == "asc" else "asc"
+        context["next_sort_order"] = (
+            "desc" if self.request.GET.get("sort_order", "asc") == "asc" else "asc"
+        )
         context["comment_form"] = CommentForm()
         return context
 
@@ -59,9 +61,7 @@ class CommentDetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["replies"] = (
-            self.object.replies
-            .select_related("user")
-            .annotate(reply_count=Count("replies"))
+        context["replies"] = self.object.replies.select_related("user").annotate(
+            reply_count=Count("replies")
         )
         return context
