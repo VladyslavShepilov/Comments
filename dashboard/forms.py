@@ -13,10 +13,11 @@ ALLOWED_ATTRIBUTES = {
 
 
 class CommentForm(forms.ModelForm):
+    captcha = CaptchaField()
 
     class Meta:
         model = Comment
-        fields = ["text", "parent", "image"]
+        fields = ["text", "parent", "captcha", "image"]
 
     def clean_text(self):
         text = self.cleaned_data.get("text", "")
