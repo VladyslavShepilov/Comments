@@ -7,7 +7,10 @@
         at {{ comment.created_at }}
     </div>
     <p class="comment-text">{{ comment.text }}</p>
-    
+    {% if comment.image %}
+        <img src="{{ comment.image.url }}" alt="Comment Image" class="comment-img">
+    {% endif %}
+
     <button type="button" class="btn btn-primary" onclick="showReplyForm({{ comment.id }})">Reply</button>
     <div id="reply-form-{{ comment.id }}" style="display:none;"></div>
 

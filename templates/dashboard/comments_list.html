@@ -16,6 +16,7 @@
             {% csrf_token %}
             {{ comment_form.text }}
             <div class="captcha">{{ comment_form.captcha }}</div>
+            <label for="{{ user_form.avatar.id_for_label }}">{{ comment_form.image }}</label>
             <input type="hidden" name="parent" value="">
             <button type="submit" class="btn btn-success">Submit</button>
         </form>
