@@ -49,7 +49,7 @@ class CommentsListView(generic.ListView):
         if form.is_valid():
             comment = form.save(user=self.request.user)
             comment_id = comment.id
-            return HttpResponseRedirect(f"{reverse('comments_list')}#comment-{comment_id}")
+            return HttpResponseRedirect(f"{reverse('comment-list')}#comment-{comment_id}")
         else:
             parent_id = request.POST.get("parent")
             fragment_identifier = f"reply-form-{parent_id}" if parent_id else "comment-form"
