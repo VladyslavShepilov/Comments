@@ -23,7 +23,7 @@ class CommentForm(forms.ModelForm):
 
     class Meta:
         model = Comment
-        fields = ["text", "parent", "captcha", "file"]
+        fields = ["text", "parent", "captcha", "file", "image"]
 
     def clean_text(self):
         text = self.cleaned_data.get("text", "")
@@ -35,24 +35,35 @@ class CommentForm(forms.ModelForm):
         )
         return cleaned_text
 
-    def save(self, commit=True, user=None):
-        comment = super().save(commit=False)
+    def clean_file(self):
         uploaded_file = self.cleaned_data.get("file")
         if uploaded_file:
             try:
-                img = Image.open(uploaded_file)
-                img.verify()
-                validate_image_extension(uploaded_file)
-                validate_image_size(uploaded_file)
-                validate_image_file(uploaded_file)
-                comment.image = uploaded_file
-                comment.file = None
-            except (IOError, SyntaxError, ValidationError):
                 validate_text_file_extension(uploaded_file)
                 validate_text_file_size(uploaded_file)
-                comment.file = uploaded_file
-                comment.image = None
+            except ValidationError:
+                raise ValidationError(
+                    "Invalid text file. Please ensure it is a TXT file and does not exceed the size limit."
+                )
+        return uploaded_file
 
+    def clean_image(self):
+        uploaded_image = self.cleaned_data.get("image")
+        if uploaded_image:
+            try:
+                validate_image_extension(uploaded_image)
+                validate_image_size(uploaded_image)
+                validate_image_file(uploaded_image)
+                img = Image.open(uploaded_image)
+                img.verify()
+            except (IOError, SyntaxError, ValidationError):
+                raise ValidationError(
+                    "Invalid image file. Please ensure it is a supported image format and does not exceed the size or dimension limits."
+                )
+        return uploaded_image
+
+    def save(self, commit=True, user=None):
+        comment = super().save(commit=False)
         if user:
             comment.user = user
         if commit:
