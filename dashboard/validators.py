@@ -1,38 +1,42 @@
-from django.core.files.images import get_image_dimensions
+from PIL import Image
 from django.core.exceptions import ValidationError
 
 
-# Image validators
 def validate_image_extension(image):
-    valid_extensions = ["jpg", "jpeg", "png", "gif"]
-    ext = image.name.split(".")[-1].lower()
-    if ext not in valid_extensions:
-        raise ValidationError("Unsupported file extension. Please upload JPG, GIF, or PNG files.")
+    valid_extensions = ["jpg", "jpeg", "png"]
+    extension = image.name.split(".")[-1].lower()
+    if extension not in valid_extensions:
+        raise ValidationError("Unsupported image extension. Please upload JPG, JPEG, or PNG images.")
 
 
 def validate_image_size(image):
-    width, height = get_image_dimensions(image)
-    if width > 320 or height > 240:
-        raise ValidationError("Image dimensions must be no larger than 320x240 pixels.")
+    try:
+        img = Image.open(image)
+        img.verify()
+        img = Image.open(image)
+        max_width, max_height = 320, 240
+        if img.width > max_width or img.height > max_height:
+            raise ValidationError(f"Image dimensions must be no larger than {max_width}x{max_height} pixels.")
+    except (IOError, SyntaxError):
+        raise ValidationError("Invalid image file.")
 
 
 def validate_image_file(image):
-    file_size = image.file.size
-    limit_mb = 5
-    if file_size > limit_mb * 1024 * 1024:
-        raise ValidationError(f"Max size of file is {limit_mb}MB.")
+    try:
+        img = Image.open(image)
+        img.verify()
+    except (IOError, SyntaxError):
+        raise ValidationError("Invalid image file.")
 
 
-# Text validators
 def validate_text_file_size(file):
-    max_size_mb = 0.1
-    file_size = file.file.size
-    if file_size > max_size_mb * 1024 * 1024:
-        raise ValidationError(f"File size should not exceed {max_size_mb * 1024} KB.")
+    max_size_mb = 2
+    if file.size > max_size_mb * 1024 * 1024:
+        raise ValidationError(f"Text file size must be no larger than {max_size_mb} MB.")
 
 
 def validate_text_file_extension(file):
     valid_extensions = ["txt"]
-    ext = file.name.split(".")[-1].lower()
-    if ext not in valid_extensions:
+    extension = file.name.split(".")[-1].lower()
+    if extension not in valid_extensions:
         raise ValidationError("Unsupported file extension. Please upload TXT files only.")
