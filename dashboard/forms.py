@@ -8,7 +8,7 @@ class CommentForm(forms.ModelForm):
 
     class Meta:
         model = Comment
-        fields = ["text", "parent", "captcha"]
+        fields = ["text", "parent", "image", "captcha"]
 
     def save(self, commit=True, user=None):
         comment = super().save(commit=False)
