@@ -13,7 +13,7 @@ class CommentsListView(generic.ListView):
     paginate_by = 25
 
     def get_queryset(self):
-        replies_prefetch = Prefetch('replies', queryset=Comment.objects.select_related('user').annotate(reply_count=Count('replies')))
+        replies_prefetch = Prefetch("replies", queryset=Comment.objects.select_related("user").annotate(reply_count=Count("replies")))
         queryset = (
             Comment.objects.filter(parent__isnull=True)
             .select_related("user")

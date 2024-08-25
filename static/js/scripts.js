@@ -55,18 +55,11 @@ function loadReplies(commentId) {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-    var fragment = "{{ fragment_identifier }}";
+    const fragment = window.location.hash;
     if (fragment) {
-        var element = document.getElementById(fragment);
-
-        if (!element && fragment.includes("reply-form")) {
-            var parentCommentId = fragment.replace("reply-form-", "");
-            loadReplies(parentCommentId);
-            element = document.getElementById(fragment);
-        }
-
-        if (element) {
-            element.scrollIntoView({ behavior: "smooth" });
+        const targetElement = document.querySelector(fragment);
+        if (targetElement) {
+            targetElement.scrollIntoView({ behavior: "smooth", block: "start" });
         }
     }
 });
