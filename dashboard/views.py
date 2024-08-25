@@ -13,11 +13,10 @@ class CommentsListView(generic.ListView):
     paginate_by = 25
 
     def get_queryset(self):
-        replies_prefetch = Prefetch("replies", queryset=Comment.objects.select_related("user").annotate(reply_count=Count("replies")))
         queryset = (
             Comment.objects.filter(parent__isnull=True)
             .select_related("user")
-            .prefetch_related(replies_prefetch)
+            .prefetch_related("replies")
             .annotate(reply_count=Count("replies"))
         )
 
@@ -44,17 +43,20 @@ class CommentsListView(generic.ListView):
         return context
 
     def post(self, request, *args, **kwargs):
-        form = CommentForm(request.POST)
+        form = CommentForm(request.POST, request.FILES)
         if form.is_valid():
             comment = form.save(user=self.request.user)
-            comment_id = comment.id
-            return HttpResponseRedirect(f"{reverse('comment-list')}#comment-{comment_id}")
+
+            print("Comment saved successfully with ID:", comment.id)
+
+            return HttpResponseRedirect(f"{reverse('comment-list')}#comment-{comment.id}")
         else:
+            print("Form errors:", form.errors)
             parent_id = request.POST.get("parent")
-            fragment_identifier = f"reply-form-{parent_id}" if parent_id else "comment-form"
+            comment_identifier = f"reply-form-{parent_id}" if parent_id else "comment-form"
 
             context = self.get_context_data(object_list=self.get_queryset())
             context["comment_form"] = form
-            context["fragment_identifier"] = fragment_identifier
+            context["fragment_identifier"] = comment_identifier
 
             return render(request, self.template_name, context, status=400)
