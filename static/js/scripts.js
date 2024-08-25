@@ -21,7 +21,6 @@ function loadReplies(commentId) {
     }
 }
 
-
 function showReplyForm(replyId) {
     var formId = "reply-form-" + replyId;
     var formContainer = document.getElementById(formId);
@@ -40,8 +39,32 @@ function showReplyForm(replyId) {
             parentField.value = replyId;
         }
 
+        var commentIdField = document.createElement("input");
+        commentIdField.type = "hidden";
+        commentIdField.name = "comment_id";
+        commentIdField.value = replyId;
+
+        formElement.appendChild(commentIdField);
         formContainer.appendChild(clonedForm);
     }
 
     formContainer.style.display = (formContainer.style.display === "none" || formContainer.style.display === "") ? "block" : "none";
 }
+
+
+document.addEventListener("DOMContentLoaded", function() {
+    var fragment = "{{ fragment_identifier }}";
+    if (fragment) {
+        var element = document.getElementById(fragment);
+
+        if (!element && fragment.includes("reply-form")) {
+            var parentCommentId = fragment.replace("reply-form-", "");
+            loadReplies(parentCommentId);
+            element = document.getElementById(fragment);
+        }
+
+        if (element) {
+            element.scrollIntoView({ behavior: "smooth" });
+        }
+    }
+});
