@@ -1,10 +1,7 @@
 from django.views import generic
-from django.db.models import Count
-from django.urls import reverse
+from django.db.models import Count, Prefetch
+from django.shortcuts import render, reverse
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
-
-
 from .models import Comment
 from .forms import CommentForm
 
@@ -16,9 +13,11 @@ class CommentsListView(generic.ListView):
     paginate_by = 25
 
     def get_queryset(self):
+        replies_prefetch = Prefetch('replies', queryset=Comment.objects.select_related('user').annotate(reply_count=Count('replies')))
         queryset = (
             Comment.objects.filter(parent__isnull=True)
             .select_related("user")
+            .prefetch_related(replies_prefetch)
             .annotate(reply_count=Count("replies"))
         )
 
@@ -59,16 +58,3 @@ class CommentsListView(generic.ListView):
             context["fragment_identifier"] = fragment_identifier
 
             return render(request, self.template_name, context, status=400)
-
-
-class CommentDetailView(generic.DetailView):
-    model = Comment
-    template_name = "dashboard/comment_replies.html"
-    context_object_name = "comment"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["replies"] = self.object.replies.select_related("user").annotate(
-            reply_count=Count("replies")
-        )
-        return context
