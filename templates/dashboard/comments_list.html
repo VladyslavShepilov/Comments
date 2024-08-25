@@ -21,37 +21,9 @@
         </form>
     </div>
 
-        {% for comment in comments %}
-            <div class="comment" id="comment-{{ comment.id }}">
-                <div class="comment-header">
-                    <img src="{{ comment.user.avatar.url }}" alt="Profile Image" class="profile-img">
-                    <a href="{% url 'user-detail' pk=comment.user.pk %}" class="comment-link">{{ comment.user.username }}</a>
-                    at {{ comment.created_at }}
-                </div>
-                <p class="comment-text">{{ comment.text }}</p>
-
-                <button type="button" class="btn btn-primary" onclick="showReplyForm({{ comment.id }})">Reply</button>
-                <div id="reply-form-{{ comment.id }}" style="display:none;"></div>
-
-                {% if comment.replies.exists %}
-                    <div class="replies">
-                        {% for reply in comment.replies.all %}
-                            <div class="comment" id="comment-{{ reply.id }}">
-                                <div class="comment-header">
-                                    <img src="{{ reply.user.avatar.url }}" alt="Profile Image" class="profile-img">
-                                    <a href="{% url 'user-detail' pk=reply.user.pk %}" class="comment-link">{{ reply.user.username }}</a>
-                                    at {{ reply.created_at }}
-                                </div>
-                                <p class="comment-text">{{ reply.text }}</p>
-                                <button type="button" class="btn btn-primary" onclick="showReplyForm({{ reply.id }})">Reply</button>
-                                <div id="reply-form-{{ reply.id }}" style="display:none;"></div>
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-        {% endfor %}
-    </div>
+    {% for comment in comments %}
+        {% include "dashboard/comment_tree.html" with comment=comment %}
+    {% endfor %}
 
     <div class="pagination">
         <span class="step-links">

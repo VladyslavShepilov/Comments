@@ -1,42 +1,39 @@
 function showReplyForm(replyId) {
-    var formId = "reply-form-" + replyId;
-    var formContainer = document.getElementById(formId);
+    const formContainer = document.getElementById(`reply-form-${replyId}`);
+    const formTemplate = document.getElementById("reply-form-template");
 
-    if (!formContainer || formContainer.style.display === "none") {
-        var formTemplate = document.getElementById("reply-form-template");
-        var clonedForm = formTemplate.cloneNode(true);
+    // Toggle form visibility
+    if (formContainer.style.display === "none" || !formContainer.style.display) {
+        // Clear any existing form and clone the template
+        formContainer.innerHTML = "";
+        const clonedForm = formTemplate.cloneNode(true);
         clonedForm.style.display = "block";
-        clonedForm.id = formId;
+        clonedForm.id = `reply-form-${replyId}`;
 
-        var formElement = clonedForm.querySelector("form");
-        formElement.action = `/dashboard/`;
+        // Update form action and set the parent ID
+        const formElement = clonedForm.querySelector("form");
+        formElement.action = "/dashboard/";
 
-        var parentField = formElement.querySelector("input[name='parent']");
+        const parentField = formElement.querySelector("input[name='parent']");
         if (parentField) {
             parentField.value = replyId;
         }
 
-        if (formContainer) {
-            formContainer.innerHTML = "";
-            formContainer.appendChild(clonedForm);
-        } else {
-            var newFormContainer = document.createElement("div");
-            newFormContainer.id = formId;
-            newFormContainer.style.display = "block";
-            newFormContainer.appendChild(clonedForm);
-            document.getElementById("comment-" + replyId).appendChild(newFormContainer);
-        }
+        // Append the cloned form to the container
+        formContainer.appendChild(clonedForm);
     }
 
-    formContainer.style.display = (formContainer.style.display === "none" || formContainer.style.display === "") ? "block" : "none";
+    // Toggle display
+    formContainer.style.display = formContainer.style.display === "block" ? "none" : "block";
 }
 
 function loadReplies(commentId) {
-    var replyContainer = document.getElementById("replies-" + commentId);
-    var button = document.getElementById("comment-button-" + commentId);
+    const replyContainer = document.getElementById(`replies-${commentId}`);
+    const button = document.getElementById(`comment-button-${commentId}`);
 
-    if (replyContainer.style.display === "none" || replyContainer.style.display === "") {
-        if (replyContainer.innerHTML.trim() === "") {
+    // Toggle reply visibility
+    if (replyContainer.style.display === "none" || !replyContainer.style.display) {
+        if (!replyContainer.innerHTML.trim()) {
             fetch(`/dashboard/${commentId}/replies/`)
                 .then(response => response.text())
                 .then(html => {
