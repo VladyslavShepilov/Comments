@@ -23,6 +23,7 @@ def validate_image_file(image):
         raise ValidationError(f"Max size of file is {limit_mb}MB.")
 
 
+# Text validators
 def validate_text_file_size(file):
     max_size_mb = 0.1
     file_size = file.file.size
