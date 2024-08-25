@@ -1,5 +1,9 @@
 from django.views import generic
 from django.db.models import Count
+from django.urls import reverse
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+
 
 from .models import Comment
 from .forms import CommentForm
@@ -37,21 +41,24 @@ class CommentsListView(generic.ListView):
             "desc" if self.request.GET.get("sort_order", "asc") == "asc" else "asc"
         )
         context["comment_form"] = CommentForm()
+        context["current_query_params"] = self.request.GET.urlencode()
         return context
 
     def post(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        self.object_list = queryset
-        context = self.get_context_data(object_list=queryset)
-
         form = CommentForm(request.POST)
         if form.is_valid():
-            form.save(user=self.request.user)
-            context["comment_form"] = CommentForm()
+            comment = form.save(user=self.request.user)
+            comment_id = comment.id
+            return HttpResponseRedirect(f"{reverse('comments_list')}#comment-{comment_id}")
         else:
-            context["comment_form"] = form
+            parent_id = request.POST.get("parent")
+            fragment_identifier = f"reply-form-{parent_id}" if parent_id else "comment-form"
 
-        return self.render_to_response(context)
+            context = self.get_context_data(object_list=self.get_queryset())
+            context["comment_form"] = form
+            context["fragment_identifier"] = fragment_identifier
+
+            return render(request, self.template_name, context, status=400)
 
 
 class CommentDetailView(generic.DetailView):

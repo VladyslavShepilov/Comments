@@ -11,17 +11,17 @@
         </div>
     </div>
 
-    <div id="reply-form-template" style="display:none;">
-        <form method="post" action="">
-            {% csrf_token %}
-            {{ comment_form.text }}
-            <div class="captcha">{{ comment_form.captcha }}</div>
-            <input type="hidden" name="parent" value="">
-            <button type="submit" class="btn btn-success">Submit</button>
-        </form>
-    </div>
 
-
+<div id="reply-form-template" style="display:none;">
+    <form method="post" action="">
+        {% csrf_token %}
+        {{ comment_form.text }}
+        <div class="captcha">{{ comment_form.captcha }}</div>
+        <input type="hidden" name="parent" value="">
+        <input type="hidden" name="comment_id" value="">
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+</div>
 
 
         {% for comment in comments %}
@@ -52,8 +52,8 @@
     <div class="pagination">
         <span class="step-links">
             {% if page_obj.has_previous %}
-                <a href="?page=1">&laquo; first</a>
-                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                <a href="?page=1&{{ current_query_params }}">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}&{{ current_query_params }}">previous</a>
             {% endif %}
 
             <span class="current">
@@ -61,8 +61,8 @@
             </span>
 
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">next</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                <a href="?page={{ page_obj.next_page_number }}&{{ current_query_params }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}&{{ current_query_params }}">last &raquo;</a>
             {% endif %}
         </span>
     </div>
