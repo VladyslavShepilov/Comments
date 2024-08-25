@@ -339,3 +339,12 @@ header a:hover {
     margin-bottom: 5px;
 }
 
+.comment-img {
+    max-width: 320px;
+    max-height: 240px;
+    width: auto;
+    height: auto;
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
