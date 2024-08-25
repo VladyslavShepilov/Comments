@@ -6,9 +6,19 @@
         <a href="{% url 'user-detail' pk=comment.user.pk %}" class="comment-link">{{ comment.user.username }}</a>
         at {{ comment.created_at }}
     </div>
+
     <p class="comment-text">{{ comment.text }}</p>
+
     {% if comment.image %}
-        <img src="{{ comment.image.url }}" alt="Comment Image" class="comment-img">
+        <div class="comment-media">
+            <img src="{{ comment.image.url }}" alt="Comment Image" class="comment-img">
+        </div>
+    {% endif %}
+
+    {% if comment.file %}
+        <div class="comment-file">
+            <a href="{{ comment.file.url }}" target="_blank">{{ comment.file.name }}</a>
+        </div>
     {% endif %}
 
     <button type="button" class="btn btn-primary" onclick="showReplyForm({{ comment.id }})">Reply</button>
