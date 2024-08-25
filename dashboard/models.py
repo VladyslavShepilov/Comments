@@ -18,6 +18,7 @@ class Comment(models.Model):
     image = models.ImageField(
         upload_to=text_image_file_path,
         null=True,
+        blank=True
     )
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(
