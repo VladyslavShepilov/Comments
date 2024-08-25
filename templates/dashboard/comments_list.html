@@ -41,5 +41,21 @@
         </span>
     </div>
 
-    <script src="{% static 'js/scripts.js' %}"></script>
+    <!-- Include JavaScript at the end of the body -->
+    <script src="{% static 'js/scripts.js' %}" defer></script>
+
+    {% if fragment_identifier %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const fragment = "{{ fragment_identifier|escapejs }}";
+            if (fragment) {
+                const targetElement = document.querySelector(`#${fragment}`);
+                if (targetElement) {
+                    targetElement.style.display = "block";
+                    targetElement.scrollIntoView({ behavior: "smooth", block: "start" });
+                }
+            }
+        });
+    </script>
+    {% endif %}
 {% endblock %}
