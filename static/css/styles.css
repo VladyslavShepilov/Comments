@@ -321,3 +321,30 @@ header a:hover {
 .btn-submit:hover {
     background-color: #ffa500;
 }
+
+#reply-form-template textarea {
+    width: 70%;
+    height: 50px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    resize: none;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.captcha {
+    display:block;
+    margin-bottom: 5px;
+}
+
+.comment-img {
+    max-width: 320px;
+    max-height: 240px;
+    width: auto;
+    height: auto;
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
