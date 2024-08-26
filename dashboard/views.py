@@ -56,11 +56,15 @@ class CommentsListView(generic.ListView):
 
             print("Comment saved successfully with ID:", comment.id)
 
-            return HttpResponseRedirect(f"{reverse('comment-list')}#comment-{comment.id}")
+            return HttpResponseRedirect(
+                f"{reverse('comment-list')}#comment-{comment.id}"
+            )
         else:
             print("Form errors:", form.errors)
             parent_id = request.POST.get("parent")
-            comment_identifier = f"reply-form-{parent_id}" if parent_id else "comment-form"
+            comment_identifier = (
+                f"reply-form-{parent_id}" if parent_id else "comment-form"
+            )
 
             context = self.get_context_data(object_list=self.get_queryset())
             context["comment_form"] = form
