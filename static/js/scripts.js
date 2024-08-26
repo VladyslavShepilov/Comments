@@ -7,45 +7,102 @@ function showReplyForm(replyId) {
         return;
     }
 
-    // Check if the form is already visible
     const isFormVisible = formContainer.style.display === "block";
 
-    // If the form is not visible and no form exists in the container, clone and append the form template
     if (!isFormVisible && !formContainer.querySelector("form")) {
-        // Clear any existing content
         formContainer.innerHTML = "";
 
-        // Clone the form template and set its properties
         const clonedForm = formTemplate.cloneNode(true);
         clonedForm.id = `reply-form-${replyId}`;
-        clonedForm.style.display = "block"; // Make sure the form is visible
-
-        // Update the form action URL
+        clonedForm.style.display = "block";
         const formElement = clonedForm.querySelector("form");
         formElement.action = `/dashboard/`;
 
-        // Set the parent ID in the form
         const parentField = formElement.querySelector("input[name='parent']");
         if (parentField) {
             parentField.value = replyId;
         }
 
-        // Append the cloned form to the container
         formContainer.appendChild(clonedForm);
     }
 
-    // Toggle the display of the form container
     formContainer.style.display = isFormVisible ? "none" : "block";
 }
 
-// Ensure the form scrolls into view if a hash is present in the URL
 document.addEventListener("DOMContentLoaded", function() {
     const fragment = window.location.hash;
     if (fragment) {
         const targetElement = document.querySelector(fragment);
         if (targetElement) {
-            targetElement.style.display = "block"; // Ensure the target element is visible
+            targetElement.style.display = "block";
             targetElement.scrollIntoView({ behavior: "smooth", block: "start" });
         }
     }
+
+    const accessToken = document.querySelector('meta[name="access_token"]')?.content;
+    const refreshToken = document.querySelector('meta[name="refresh_token"]')?.content;
+
+    if (accessToken) {
+        document.cookie = `access_token=${accessToken}; path=/; secure; HttpOnly`;
+    }
+
+    if (refreshToken) {
+        document.cookie = `refresh_token=${refreshToken}; path=/; secure; HttpOnly`;
+    }
 });
+
+async function checkAndRefreshToken() {
+    const getCookie = (name) => {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    };
+
+    const accessToken = getCookie('access_token');
+    const refreshToken = getCookie('refresh_token');
+
+    if (!accessToken || !refreshToken) {
+        console.error("Tokens are missing, user might need to log in again.");
+        window.location.href = "/user/login/";
+        return;
+    }
+
+    const tokenPayload = JSON.parse(atob(accessToken.split(".")[1]));
+    const currentTime = Math.floor(Date.now() / 1000);
+
+    if (tokenPayload.exp < currentTime) {
+        const response = await fetch("/api/token/refresh/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ refresh: refreshToken })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            document.cookie = `access_token=${data.access}; path=/; secure; HttpOnly`;
+        } else {
+            console.error("Token refresh failed, redirecting to login.");
+            window.location.href = "/user/login/";
+        }
+    }
+}
+
+async function fetchWithAuth(url, options = {}) {
+    await checkAndRefreshToken();
+
+    const accessToken = localStorage.getItem("access_token");
+
+    if (!accessToken) {
+        console.error("No access token found, redirecting to login.");
+        window.location.href = "/user/login/";
+        return;
+    }
+
+    options.headers = options.headers || {};
+    options.headers["Authorization"] = `Bearer ${accessToken}`; // Add JWT token to the header
+    options.headers["Content-Type"] = options.headers["Content-Type"] || "application/json";
+
+    return fetch(url, options);
+}

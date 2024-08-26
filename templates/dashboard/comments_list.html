@@ -11,41 +11,40 @@
         </div>
     </div>
 
+    <div id="reply-form-template" style="display:none;">
+        <form method="post" action="" enctype="multipart/form-data">
+            {% csrf_token %}
 
-<div id="reply-form-template" style="display:none;">
-    <form method="post" action="" enctype="multipart/form-data">
-        {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ comment_form.text.id_for_label }}">{{ comment_form.text.label }}</label>
+                {{ comment_form.text }}
+                {{ comment_form.text.errors }}
+            </div>
 
-        <div class="form-group">
-            <label for="{{ comment_form.text.id_for_label }}">{{ comment_form.text.label }}</label>
-            {{ comment_form.text }}
-            {{ comment_form.text.errors }}
-        </div>
+            <div class="form-group">
+                <label for="{{ comment_form.captcha.id_for_label }}">{{ comment_form.captcha.label }}</label>
+                {{ comment_form.captcha }}
+                {{ comment_form.captcha.errors }}
+            </div>
 
-        <div class="form-group">
-            <label for="{{ comment_form.captcha.id_for_label }}">{{ comment_form.captcha.label }}</label>
-            {{ comment_form.captcha }}
-            {{ comment_form.captcha.errors }}
-        </div>
+            <div class="form-group">
+                <label for="{{ comment_form.file.id_for_label }}">Upload a Text File:</label>
+                {{ comment_form.file }}
+                <small class="form-text text-muted">Supported format: TXT. Max size: 0.1MB.</small>
+                {{ comment_form.file.errors }}
+            </div>
 
-        <div class="form-group">
-            <label for="{{ comment_form.file.id_for_label }}">Upload a Text File:</label>
-            {{ comment_form.file }}
-            <small class="form-text text-muted">Supported format: TXT. Max size: 0.1MB.</small>
-            {{ comment_form.file.errors }}
-        </div>
+            <div class="form-group">
+                <label for="{{ comment_form.image.id_for_label }}">Upload an Image:</label>
+                {{ comment_form.image }}
+                <small class="form-text text-muted">Supported formats: JPG, JPEG, PNG, GIF. Max dimensions: 320x240 pixels. Max size: 5MB.</small>
+                {{ comment_form.image.errors }}
+            </div>
 
-        <div class="form-group">
-            <label for="{{ comment_form.image.id_for_label }}">Upload an Image:</label>
-            {{ comment_form.image }}
-            <small class="form-text text-muted">Supported formats: JPG, JPEG, PNG, GIF. Max dimensions: 320x240 pixels. Max size: 5MB.</small>
-            {{ comment_form.image.errors }}
-        </div>
-
-        <input type="hidden" name="parent" value="">
-        <button type="submit" class="btn btn-success">Submit</button>
-    </form>
-</div>
+            <input type="hidden" name="parent" value="">
+            <button type="submit" class="btn btn-success">Submit</button>
+        </form>
+    </div>
 
     {% for comment in comments %}
         {% include "dashboard/comment_tree.html" with comment=comment %}
@@ -67,7 +66,6 @@
         </span>
     </div>
 
-    <!-- Include JavaScript at the end of the body -->
     <script src="{% static 'js/scripts.js' %}" defer></script>
 
     {% if fragment_identifier %}
