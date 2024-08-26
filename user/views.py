@@ -34,7 +34,7 @@ class UserLoginView(LoginView):
 
         response = requests.post(
             "http://127.0.0.1:8000/api/token/",
-            data={"username": username, "password": password}
+            data={"username": username, "password": password},
         )
 
         if response.status_code == 200:
@@ -44,8 +44,12 @@ class UserLoginView(LoginView):
 
             response = HttpResponseRedirect(redirect_url)
 
-            response.set_cookie("access_token", access_token, httponly=True, secure=True, path="/")
-            response.set_cookie("refresh_token", refresh_token, httponly=True, secure=True, path="/")
+            response.set_cookie(
+                "access_token", access_token, httponly=True, secure=True, path="/"
+            )
+            response.set_cookie(
+                "refresh_token", refresh_token, httponly=True, secure=True, path="/"
+            )
 
             return response
         else:

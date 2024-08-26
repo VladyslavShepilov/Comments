@@ -9,7 +9,7 @@ from .validators import (
     validate_image_size,
     validate_image_file,
     validate_text_file_size,
-    validate_text_file_extension
+    validate_text_file_extension,
 )
 
 
@@ -31,13 +31,13 @@ class Comment(models.Model):
         upload_to=image_file_path,
         null=True,
         blank=True,
-        validators=[validate_image_extension, validate_image_size, validate_image_file]
+        validators=[validate_image_extension, validate_image_size, validate_image_file],
     )
     file = models.FileField(
         upload_to=file_path,
         null=True,
         blank=True,
-        validators=[validate_text_file_size, validate_text_file_extension]
+        validators=[validate_text_file_size, validate_text_file_extension],
     )
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(

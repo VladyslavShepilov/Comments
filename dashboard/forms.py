@@ -13,9 +13,7 @@ from .validators import (
 from PIL import Image
 
 ALLOWED_TAGS = {"a", "code", "i", "strong"}
-ALLOWED_ATTRIBUTES = {
-    "a": ["href", "title"]
-}
+ALLOWED_ATTRIBUTES = {"a": ["href", "title"]}
 
 
 class CommentForm(forms.ModelForm):
