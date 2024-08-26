@@ -2,9 +2,14 @@ from django.views import generic
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth import login
 from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.contrib.auth.views import LoginView
+import requests
+from django.http import HttpResponseRedirect
 
 from .forms import UserRegistrationForm, UserUpdateForm, OptionalPasswordChangeForm
-from .models import User
+from django.contrib.auth import get_user_model
 
 
 class UserRegisterView(generic.edit.CreateView):
@@ -19,8 +24,36 @@ class UserRegisterView(generic.edit.CreateView):
         return response
 
 
+class UserLoginView(LoginView):
+    template_name = "user/login.html"
+
+    def form_valid(self, form):
+        redirect_url = reverse("comment-list")
+        username = form.cleaned_data.get("username")
+        password = form.cleaned_data.get("password")
+
+        response = requests.post(
+            "http://127.0.0.1:8000/api/token/",
+            data={"username": username, "password": password}
+        )
+
+        if response.status_code == 200:
+            tokens = response.json()
+            access_token = tokens.get("access")
+            refresh_token = tokens.get("refresh")
+
+            response = HttpResponseRedirect(redirect_url)
+
+            response.set_cookie("access_token", access_token, httponly=True, secure=True, path="/")
+            response.set_cookie("refresh_token", refresh_token, httponly=True, secure=True, path="/")
+
+            return response
+        else:
+            return self.form_invalid(form)
+
+
 class UserDetailView(generic.DetailView):
-    model = User
+    model = get_user_model()
     template_name = "user/user_detail.html"
     context_object_name = "user"
 
@@ -43,6 +76,7 @@ class UserUpdateView(generic.edit.FormView):
             self.get_context_data(user_form=user_form, password_form=password_form)
         )
 
+    @method_decorator(login_required(login_url="/user/login/"))
     def post(self, request, *args, **kwargs):
         user_form = UserUpdateForm(request.POST, request.FILES, instance=request.user)
         password_form = OptionalPasswordChangeForm(user=request.user, data=request.POST)

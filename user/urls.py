@@ -3,16 +3,16 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import LogoutView
 
-from .views import UserDetailView, UserRegisterView, UserUpdateView
+from .views import UserDetailView, UserLoginView, UserRegisterView, UserUpdateView
 
 
 urlpatterns = [
     path("user/register/", UserRegisterView.as_view(), name="register"),
     path("user/update/", UserUpdateView.as_view(), name="update"),
     path(
-        "user/login/", LoginView.as_view(template_name="user/login.html"), name="login"
+        "user/login/", UserLoginView.as_view(), name="login"
     ),
     path(
         "user/logout/",
