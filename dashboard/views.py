@@ -7,7 +7,9 @@ from django.utils.decorators import method_decorator
 from .models import Comment
 from .forms import CommentForm
 from comments.utils import jwt_required
-from comments.celery import debug_task
+
+from comments.celery import test_task
+from dashboard.tasks import check_comment
 
 
 class CommentsListView(generic.ListView):
@@ -23,7 +25,6 @@ class CommentsListView(generic.ListView):
             .prefetch_related("replies")
             .annotate(reply_count=Count("replies"))
         )
-        debug_task()
         sort_order = self.request.GET.get("sort_order", "asc")
         order_by = self.request.GET.get("order_by", "created_at")
         search_keys = ("username", "email", "created_at")
@@ -55,7 +56,7 @@ class CommentsListView(generic.ListView):
         if form.is_valid():
             comment = form.save(user=self.request.user)
 
-            print("Comment saved successfully with ID:", comment.id)
+            check_comment.delay(comment.id)
 
             return HttpResponseRedirect(
                 f"{reverse('comment-list')}#comment-{comment.id}"

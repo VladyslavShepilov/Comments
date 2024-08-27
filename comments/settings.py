@@ -13,8 +13,11 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import os
 from pathlib import Path
 from datetime import timedelta
-
 import rest_framework.permissions
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,7 +27,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "aUolt2zSlOlGLapuRbJtRERgGZeIGUppT9zJ-JWAKHo"
+SECRET_KEY = os.getenv("SECRET_KEY", "aUolt2zSlOlGLapuRbJtRERgGZeIGUppT9zJ-JWAKHo")
+OPEN_AI_KEY = os.getenv("OPEN_AI_KEY", "k-tUKEYh9WznsUaEmB2bBdl1gbkk6FwUwcU7cek-lh9xT3BlbkFJ8B6tLJe9qbqLRIhwIcQyVwmqoX6ushA5WP8knL1CYA")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -162,14 +166,7 @@ SIMPLE_JWT = {
 
 CELERY_BROKER_URL = "redis://localhost:6379/0"
 CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = "UTC"
-
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        },
-    }
-}
