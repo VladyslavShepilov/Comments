@@ -7,6 +7,7 @@ from django.utils.decorators import method_decorator
 from .models import Comment
 from .forms import CommentForm
 from comments.utils import jwt_required
+from comments.celery import debug_task
 
 
 class CommentsListView(generic.ListView):
@@ -22,7 +23,7 @@ class CommentsListView(generic.ListView):
             .prefetch_related("replies")
             .annotate(reply_count=Count("replies"))
         )
-
+        debug_task()
         sort_order = self.request.GET.get("sort_order", "asc")
         order_by = self.request.GET.get("order_by", "created_at")
         search_keys = ("username", "email", "created_at")
