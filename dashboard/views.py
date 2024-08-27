@@ -8,7 +8,6 @@ from .models import Comment
 from .forms import CommentForm
 from comments.utils import jwt_required
 
-from comments.celery import test_task
 from dashboard.tasks import check_comment
 
 
