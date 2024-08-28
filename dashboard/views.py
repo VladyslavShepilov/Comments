@@ -54,8 +54,10 @@ class CommentsListView(generic.ListView):
         form = CommentForm(request.POST, request.FILES)
         if form.is_valid():
             comment = form.save(user=self.request.user)
-
-            check_comment.delay(comment.id)
+            try:
+                check_comment.delay(comment.id)
+            except BaseException as e:
+                pass
 
             return HttpResponseRedirect(
                 f"{reverse('comment-list')}#comment-{comment.id}"
