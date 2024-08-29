@@ -15,6 +15,7 @@ from pathlib import Path
 from datetime import timedelta
 import rest_framework.permissions
 from dotenv import load_dotenv
+import dj_database_url
 
 load_dotenv()
 
@@ -31,10 +32,9 @@ SECRET_KEY = os.getenv("SECRET_KEY", "aUolt2zSlOlGLapuRbJtRERgGZeIGUppT9zJ-JWAKH
 OPEN_AI_KEY = os.getenv("OPEN_AI_KEY", "k-tUKEYh9WznsUaEmB2bBdl1gbkk6FwUwcU7cek-lh9xT3BlbkFJ8B6tLJe9qbqLRIhwIcQyVwmqoX6ushA5WP8knL1CYA")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG", True)
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "debug_toolbar",
+    "celery",
     "rest_framework",
     "rest_framework_simplejwt",
     "captcha",
@@ -55,6 +56,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -135,6 +137,10 @@ STATIC_URL = "/static/"
 STATIC_ROOT = "staticfiles/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
+if not DEBUG:
+    STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
 MEDIA_URL = "/files/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
@@ -164,8 +170,8 @@ SIMPLE_JWT = {
     "ALGORITHM": "HS256",
 }
 
-CELERY_BROKER_URL = "redis://localhost:6379/0"
-CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
+CELERY_BROKER_URL = "amqp://localhost/dashboard"
+CELERY_RESULT_BACKEND = "rpc://"
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"

@@ -8,7 +8,7 @@ from .models import Comment
 from .forms import CommentForm
 from comments.utils import jwt_required
 
-from dashboard.tasks import check_comment
+from dashboard.tasks import check_comment, raise_exceptions
 
 
 class CommentsListView(generic.ListView):
@@ -47,6 +47,7 @@ class CommentsListView(generic.ListView):
         return context
 
     def get(self, request, *args, **kwargs):
+        raise_exceptions.delay()
         return super().get(request, *args, **kwargs)
 
     @method_decorator(jwt_required)
@@ -54,10 +55,6 @@ class CommentsListView(generic.ListView):
         form = CommentForm(request.POST, request.FILES)
         if form.is_valid():
             comment = form.save(user=self.request.user)
-            try:
-                check_comment.delay(comment.id)
-            except BaseException as e:
-                pass
 
             return HttpResponseRedirect(
                 f"{reverse('comment-list')}#comment-{comment.id}"

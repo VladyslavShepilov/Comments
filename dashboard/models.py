@@ -3,6 +3,8 @@ import uuid
 from django.utils.text import slugify
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from .validators import (
     validate_image_extension,
@@ -11,6 +13,7 @@ from .validators import (
     validate_text_file_size,
     validate_text_file_extension,
 )
+from .tasks import check_comment
 
 
 def image_file_path(instance, filename):
@@ -54,3 +57,14 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+
+
+@receiver(post_save, sender=Comment)
+def verify_comment_text(sender, instance, **kwargs):
+    try:
+        is_forbidden = check_comment.delay(instance.id)
+        if is_forbidden:
+            instance.delete()
+            print(f"Comment {instance.id} is forbidden")
+    except Exception as e:
+        return False
