@@ -66,5 +66,5 @@ def verify_comment_text(sender, instance, **kwargs):
         if is_forbidden:
             instance.delete()
             print(f"Comment {instance.id} is forbidden")
-    except Exception as e:
+    except BaseException as e:
         return False
