@@ -193,7 +193,7 @@ SIMPLE_JWT = {
     "ALGORITHM": "HS256",
 }
 
-CELERY_BROKER_URL = "amqp://localhost/dashboard"
+CELERY_BROKER_URL = "amqp://localhost"
 CELERY_RESULT_BACKEND = "rpc://"
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"

@@ -4,6 +4,7 @@ from django.shortcuts import render, reverse
 from django.http import HttpResponseRedirect
 from .models import Comment
 from .forms import CommentForm
+from comments.utils import jwt_required
 
 
 class CommentsListView(generic.ListView):
@@ -42,6 +43,7 @@ class CommentsListView(generic.ListView):
         context["current_query_params"] = self.request.GET.urlencode()
         return context
 
+    @jwt_required
     def post(self, request, *args, **kwargs):
         form = CommentForm(request.POST, request.FILES)
         if form.is_valid():

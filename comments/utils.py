@@ -33,11 +33,16 @@ def get_new_tokens(refresh_token):
 def jwt_required(view_func=None, login_url: str = "login"):
     @wraps(view_func)
     def wrapper(request, *args, **kwargs):
+        redirect_to_login = HttpResponseRedirect(reverse(login_url))
+
+        if not hasattr(request, "user") or not request.user:
+            return redirect_to_login
+
         access_token = request.COOKIES.get("access_token")
         refresh_token = request.COOKIES.get("refresh_token")
 
         if not access_token:
-            return HttpResponseRedirect(reverse(login_url))
+            return redirect_to_login
 
         user = decode_jwt_token(access_token)
         if user is None:
@@ -50,9 +55,9 @@ def jwt_required(view_func=None, login_url: str = "login"):
                     request.user = decode_jwt_token(access_token)
                     return response
                 else:
-                    return HttpResponseRedirect(reverse(login_url))
+                    return redirect_to_login
             else:
-                return HttpResponseRedirect(reverse(login_url))
+                return redirect_to_login
 
         request.user = user
         return view_func(request, *args, **kwargs)
