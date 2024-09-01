@@ -12,7 +12,10 @@ def contains_bad_words(text: str) -> bool:
     try:
         response = openai_client.chat.completions.create(
             messages=[
-                {"role": "user", "content": f"Check if this text contains bad words '{text}'"},
+                {
+                    "role": "user",
+                    "content": f"Check if this text contains bad words '{text}'",
+                },
             ],
             model="gpt-3.5-turbo",
         )
@@ -26,6 +29,7 @@ def contains_bad_words(text: str) -> bool:
 @shared_task(bind=True, max_retries=5, default_retry_delay=60)
 def check_comment(self, comment_id: int) -> None:
     from dashboard.models import Comment
+
     try:
         comment = Comment.objects.get(id=comment_id)
         contains_forbidden_words = contains_bad_words(comment.text)

@@ -13,9 +13,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import os
 from pathlib import Path
 from datetime import timedelta
-import rest_framework.permissions
 from dotenv import load_dotenv
-import dj_database_url
 
 load_dotenv()
 
@@ -29,12 +27,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY", "aUolt2zSlOlGLapuRbJtRERgGZeIGUppT9zJ-JWAKHo")
-OPEN_AI_KEY = os.getenv("OPEN_AI_KEY", "k-tUKEYh9WznsUaEmB2bBdl1gbkk6FwUwcU7cek-lh9xT3BlbkFJ8B6tLJe9qbqLRIhwIcQyVwmqoX6ushA5WP8knL1CYA")
+OPEN_AI_KEY = os.getenv(
+    "OPEN_AI_KEY",
+    "k-tUKEYh9WznsUaEmB2bBdl1gbkk6FwUwcU7cek-lh9xT3BlbkFJ8B6tLJe9qbqLRIhwIcQyVwmqoX6ushA5WP8knL1CYA",
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", True)
 
 ALLOWED_HOSTS = []
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 
 # Application definition
 
@@ -50,6 +55,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
     "captcha",
+    "comments",
     "user",
     "dashboard",
 ]
@@ -98,6 +104,18 @@ DATABASES = {
     }
 }
 
+if DEBUG is False:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("POSTGRES_DB", "db_name"),
+            "USER": os.getenv("POSTGRES_USER", "db_user"),
+            "PASSWORD": os.getenv("POSTGRES_PASSWORD", "db_password"),
+            "HOST": os.getenv("POSTGRES_HOST", "localhost"),
+            "PORT": os.getenv("POSTGRES_PORT", "5432"),
+        }
+    }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -142,7 +160,7 @@ if not DEBUG:
     STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "/files/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_ROOT = os.path.join(BASE_DIR, "files", "media")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -168,9 +186,7 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "formatters": {
-        "custom": {
-            "format": "[%(levelname)s] %(asctime)s %(name)s: %(message)s"
-        },
+        "custom": {"format": "[%(levelname)s] %(asctime)s %(name)s: %(message)s"},
     },
     "handlers": {
         "console": {
