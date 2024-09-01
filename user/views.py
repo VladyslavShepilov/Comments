@@ -3,6 +3,7 @@ from django.urls import reverse_lazy, reverse
 from django.contrib.auth import login
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
+from comments.utils import jwt_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth.views import LoginView
 import requests
@@ -80,7 +81,7 @@ class UserUpdateView(generic.edit.FormView):
             self.get_context_data(user_form=user_form, password_form=password_form)
         )
 
-    @method_decorator(login_required(login_url="/user/login/"))
+    @method_decorator(jwt_required)
     def post(self, request, *args, **kwargs):
         user_form = UserUpdateForm(request.POST, request.FILES, instance=request.user)
         password_form = OptionalPasswordChangeForm(user=request.user, data=request.POST)

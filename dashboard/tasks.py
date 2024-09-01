@@ -5,7 +5,7 @@ from openai import OpenAI
 
 openai_client = OpenAI(api_key=os.getenv("OPEN_AI_KEY"))
 
-logger = get_task_logger(__name__)
+logger = get_task_logger("monitor")
 
 
 def contains_bad_words(text: str) -> bool:
