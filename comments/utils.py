@@ -35,9 +35,6 @@ def jwt_required(view_func=None, login_url: str = "login"):
     def wrapper(request, *args, **kwargs):
         redirect_to_login = HttpResponseRedirect(reverse(login_url))
 
-        if not hasattr(request, "user") or not request.user:
-            return redirect_to_login
-
         access_token = request.COOKIES.get("access_token")
         refresh_token = request.COOKIES.get("refresh_token")
 

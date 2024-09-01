@@ -62,9 +62,6 @@ class Comment(models.Model):
 @receiver(post_save, sender=Comment)
 def verify_comment_text(sender, instance, **kwargs):
     try:
-        is_forbidden = check_comment.delay(instance.id)
-        if is_forbidden:
-            instance.delete()
-            print(f"Comment {instance.id} is forbidden")
-    except BaseException as e:
+        check_comment.delay(instance.id)
+    except Exception as e:
         return False
