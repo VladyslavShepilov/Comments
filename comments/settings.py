@@ -35,10 +35,10 @@ OPEN_AI_KEY = os.getenv(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", True)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost", "0.0.0.0:8000"]
 
 INTERNAL_IPS = [
-    "127.0.0.1",
+    "localhost",
 ]
 
 # Application definition
@@ -97,14 +97,14 @@ WSGI_APPLICATION = "comments.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+if not DEBUG:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
     }
-}
-
-if DEBUG is False:
+else:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
