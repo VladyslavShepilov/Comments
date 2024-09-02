@@ -61,7 +61,4 @@ class Comment(models.Model):
 
 @receiver(post_save, sender=Comment)
 def verify_comment_text(sender, instance, **kwargs):
-    try:
-        check_comment.delay(instance.id)
-    except Exception as e:
-        return False
+    check_comment.delay(instance.id)

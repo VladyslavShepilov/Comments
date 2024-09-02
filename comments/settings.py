@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "celery",
     "rest_framework",
+    "django_celery_results",
     "rest_framework_simplejwt",
     "captcha",
     "comments",
@@ -211,9 +212,18 @@ SIMPLE_JWT = {
     "ALGORITHM": "HS256",
 }
 
-CELERY_BROKER_URL = "amqp://localhost"
-CELERY_RESULT_BACKEND = "rpc://"
-CELERY_ACCEPT_CONTENT = ["json"]
-CELERY_TASK_SERIALIZER = "json"
-CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = "UTC"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL")
+CELERY_RESULT_BACKEND = "django-db"
+CELERY_CACHE_BACKEND = "default"
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+CELERY_RESULT_EXTENDED = True
+
+CELERY_BROKER_TRANSPORT_OPTIONS = {
+    "login_method": "AMQPLAIN",
+    "userid": os.environ.get("CELERY_BROKER_USERNAME"),
+    "password": os.environ.get("CELERY_BROKER_PASSWORD"),
+}
+

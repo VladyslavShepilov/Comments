@@ -38,24 +38,23 @@ def jwt_required(view_func=None, login_url: str = "login"):
 
         access_token = request.COOKIES.get("access_token")
         refresh_token = request.COOKIES.get("refresh_token")
-
         if not access_token:
             return redirect_to_login
 
         user = decode_jwt_token(access_token)
         if user is None:
-            if refresh_token:
-                new_tokens = get_new_tokens(refresh_token)
-                if new_tokens:
-                    access_token = new_tokens.get("access")
-                    response = HttpResponseRedirect(request.path_info)
-                    response.set_cookie("access_token", access_token, httponly=True)
-                    request.user = decode_jwt_token(access_token)
-                    return response
-                else:
-                    return redirect_to_login
-            else:
+
+            if not refresh_token:
                 return redirect_to_login
+            new_tokens = get_new_tokens(refresh_token)
+
+            if not new_tokens:
+                return redirect_to_login
+            access_token = new_tokens.get("access")
+            response = HttpResponseRedirect(request.path_info)
+            response.set_cookie("access_token", access_token, httponly=True)
+            request.user = decode_jwt_token(access_token)
+            return response
 
         request.user = user
         return view_func(request, *args, **kwargs)

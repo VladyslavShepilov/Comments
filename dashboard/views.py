@@ -1,6 +1,7 @@
 from django.views import generic
 from django.db.models import Count
-from django.shortcuts import render, reverse
+from django.shortcuts import render
+from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
 
@@ -69,3 +70,10 @@ class CommentsListView(generic.ListView):
             context["fragment_identifier"] = comment_identifier
 
             return render(request, self.template_name, context, status=400)
+
+
+class CommentFormView(generic.FormView):
+    form_class = CommentForm
+    template_name = "dashboard/comment_form.html"
+    context_object_name = "comment_form"
+    success_url = reverse_lazy("comment-list")
