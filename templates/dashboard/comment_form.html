@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Submit a Comment</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label for="id_text">Comment:</label>
+      {{ form.text }}
+      {% if form.text.errors %}
+        <div class="invalid-feedback">
+          {% for error in form.text.errors %}
+            <div>{{ error }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="form-group">
+      <label for="id_file">Upload Text File:</label>
+      {{ form.file }}
+      {% if form.file.errors %}
+        <div class="invalid-feedback">
+          {% for error in form.file.errors %}
+            <div>{{ error }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="form-group">
+      <label for="id_image">Upload Image:</label>
+      {{ form.image }}
+      {% if form.image.errors %}
+        <div class="invalid-feedback">
+          {% for error in form.image.errors %}
+            <div>{{ error }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="form-group">
+      <label for="id_captcha">CAPTCHA:</label>
+      {{ form.captcha }}
+      {% if form.captcha.errors %}
+        <div class="invalid-feedback">
+          {% for error in form.captcha.errors %}
+            <div>{{ error }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+{% endblock %}

@@ -77,3 +77,10 @@ class CommentFormView(generic.FormView):
     template_name = "dashboard/comment_form.html"
     context_object_name = "comment_form"
     success_url = reverse_lazy("comment-list")
+
+    def form_valid(self, form):
+        if self.request.user.is_authenticated:
+            form.save(user=self.request.user)
+            return super().form_valid(form)
+
+        return HttpResponseRedirect(reverse("login"))
