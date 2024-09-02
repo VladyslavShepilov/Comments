@@ -27,7 +27,8 @@ Set your .env variables using .env_sample, or simply copy-paste values. Retrieve
     python manage.py runserver
 
 ### Using Docker
-    cp env.sample .env
+    cp .env_sample .env
+    python manage.py makemigrations
     docker-compose build
     docker-compose up
 Installs requirements and runs the Django server.
