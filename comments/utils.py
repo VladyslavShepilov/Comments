@@ -24,7 +24,7 @@ def decode_jwt_token(token):
 def get_new_tokens(refresh_token):
     response = requests.post(
         f"{settings.BASE_API_URL}{reverse('token_refresh')}",
-        data={"refresh": refresh_token}
+        data={"refresh": refresh_token},
     )
     if response.status_code == 200:
         return response.json()

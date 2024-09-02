@@ -226,4 +226,3 @@ CELERY_BROKER_TRANSPORT_OPTIONS = {
     "userid": os.environ.get("CELERY_BROKER_USERNAME"),
     "password": os.environ.get("CELERY_BROKER_PASSWORD"),
 }
-

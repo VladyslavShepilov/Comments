@@ -56,7 +56,8 @@ class CommentForm(forms.ModelForm):
                 img.verify()
             except (IOError, SyntaxError, ValidationError):
                 raise ValidationError(
-                    "Invalid image file. Please ensure it is a supported image format and does not exceed the size or dimension limits."
+                    "Invalid image file. "
+                    "Please ensure it is a supported image format and does not exceed the size or dimension limits."
                 )
         return uploaded_image
 

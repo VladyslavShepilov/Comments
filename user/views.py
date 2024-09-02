@@ -6,11 +6,14 @@ from comments.utils import jwt_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth.views import LoginView
 import requests
-from django.http import HttpResponseRedirect
 from django.conf import settings
-
-from .forms import UserRegistrationForm, UserUpdateForm, OptionalPasswordChangeForm
 from django.contrib.auth import get_user_model
+
+from .forms import (
+    UserRegistrationForm,
+    UserUpdateForm,
+    OptionalPasswordChangeForm
+)
 
 
 class UserRegisterView(generic.edit.CreateView):
