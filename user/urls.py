@@ -4,7 +4,6 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 from django.contrib.auth.views import LogoutView
-
 from .views import UserDetailView, UserLoginView, UserRegisterView, UserUpdateView
 
 

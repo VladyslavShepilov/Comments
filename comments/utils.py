@@ -23,7 +23,8 @@ def decode_jwt_token(token):
 
 def get_new_tokens(refresh_token):
     response = requests.post(
-        "http://127.0.0.1:8000/api/token/refresh/", data={"refresh": refresh_token}
+        f"{settings.BASE_API_URL}{reverse('token_refresh')}",
+        data={"refresh": refresh_token}
     )
     if response.status_code == 200:
         return response.json()

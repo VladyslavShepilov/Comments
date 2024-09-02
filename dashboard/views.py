@@ -1,5 +1,5 @@
 from django.views import generic
-from django.db.models import Count, Prefetch
+from django.db.models import Count
 from django.shortcuts import render, reverse
 from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
@@ -7,6 +7,7 @@ from django.utils.decorators import method_decorator
 from .models import Comment
 from .forms import CommentForm
 from comments.utils import jwt_required
+from django.conf import settings
 
 
 class CommentsListView(generic.ListView):
@@ -22,7 +23,7 @@ class CommentsListView(generic.ListView):
             .prefetch_related("replies")
             .annotate(reply_count=Count("replies"))
         )
-
+        print(settings.DEBUG)
         sort_order = self.request.GET.get("sort_order", "asc")
         order_by = self.request.GET.get("order_by", "created_at")
         search_keys = ("username", "email", "created_at")

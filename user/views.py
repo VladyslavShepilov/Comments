@@ -2,12 +2,12 @@ from django.views import generic
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth import login
 from django.shortcuts import redirect
-from django.contrib.auth.decorators import login_required
 from comments.utils import jwt_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth.views import LoginView
 import requests
 from django.http import HttpResponseRedirect
+from django.conf import settings
 
 from .forms import UserRegistrationForm, UserUpdateForm, OptionalPasswordChangeForm
 from django.contrib.auth import get_user_model
@@ -34,7 +34,7 @@ class UserLoginView(LoginView):
         password = form.cleaned_data.get("password")
 
         response = requests.post(
-            "http://127.0.0.1:8000/api/token/",
+            f"{settings.BASE_API_URL}{reverse('token_obtain_pair')}",
             data={"username": username, "password": password},
         )
 
