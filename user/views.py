@@ -27,12 +27,12 @@ class UserRegisterView(generic.edit.CreateView):
 
 class UserLoginView(LoginView):
     template_name = "user/login.html"
+    success_url = reverse_lazy("comment-list")
 
     def form_valid(self, form):
-        redirect_url = reverse("comment-list")
+
         username = form.cleaned_data.get("username")
         password = form.cleaned_data.get("password")
-
         response = requests.post(
             f"{settings.BASE_API_URL}{reverse('token_obtain_pair')}",
             data={"username": username, "password": password},
@@ -43,7 +43,7 @@ class UserLoginView(LoginView):
             access_token = tokens.get("access")
             refresh_token = tokens.get("refresh")
 
-            response = HttpResponseRedirect(redirect_url)
+            response = super().form_valid(form)
 
             response.set_cookie(
                 "access_token", access_token, httponly=True, secure=True, path="/"
@@ -51,7 +51,6 @@ class UserLoginView(LoginView):
             response.set_cookie(
                 "refresh_token", refresh_token, httponly=True, secure=True, path="/"
             )
-
             return response
         else:
             return self.form_invalid(form)
