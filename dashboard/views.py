@@ -78,6 +78,10 @@ class CommentFormView(generic.FormView):
     context_object_name = "comment_form"
     success_url = reverse_lazy("comment-list")
 
+    @method_decorator(jwt_required)
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
     def form_valid(self, form):
         if self.request.user.is_authenticated:
             form.save(user=self.request.user)
